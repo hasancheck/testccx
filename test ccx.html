@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Подача заявки</title>
+<style>
+body {
+    background:#0f1115;
+    font-family: Arial, sans-serif;
+    color:#e5e7eb;
+}
+.panel {
+    width:360px;
+    margin:40px auto;
+    background:#1b1f24;
+    border-radius:10px;
+    padding:20px;
+}
+.title {
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+.info {
+    font-size:13px;
+    line-height:1.6;
+    margin-bottom:15px;
+}
+hr {
+    border:none;
+    border-top:1px solid #2a2f36;
+    margin:15px 0;
+}
+.input {
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    background:#2a2f36;
+    border:none;
+    border-radius:6px;
+    color:#fff;
+}
+.balance {
+    display:flex;
+    gap:8px;
+    margin:15px 0;
+}
+.balance button {
+    flex:1;
+    padding:8px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+.balance .active {
+    background:#2563eb;
+    color:white;
+}
+.balance .inactive {
+    background:#2a2f36;
+    color:#aaa;
+}
+select {
+    width:100%;
+    padding:10px;
+    background:#2a2f36;
+    border:none;
+    border-radius:6px;
+    color:white;
+}
+.captcha-box {
+    margin-top:15px;
+    background:#111827;
+    padding:12px;
+    text-align:center;
+    font-size:26px;
+    letter-spacing:6px;
+    cursor:pointer;
+    user-select:none;
+}
+.submit {
+    margin-top:18px;
+    width:100%;
+    padding:12px;
+    background:#15803d;
+    color:white;
+    font-size:15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="panel">
+    <div class="title">Подача заявки</div>
+
+    <div class="info">
+        Код торгового инструмента: <b>DTDDP0016</b><br>
+        Наименование инструмента: <b>Дизельное топливо зимнее</b><br>
+        Размер лота: <b>350 ton</b>
+    </div>
+
+    <hr>
+
+    <input class="input" type="number" id="price" placeholder="Цена за единицу *">
+    <input class="input" type="number" id="lots" placeholder="Количество лотов *" oninput="calcAmount()">
+    <input class="input" type="number" id="amount" placeholder="Количество товара * (ton)" readonly>
+
+    <div class="balance">
+        <button class="active">Клиента</button>
+        <button class="inactive">Личный</button>
+    </div>
+
+    <select>
+        <option selected>ТОО Сейком</option>
+    </select>
+
+    <div id="captchaBlock">
+        <div class="captcha-box" id="captcha" onclick="generateCaptcha()"></div>
+        <input class="input" type="text" placeholder="Капча *" id="captchaInput">
+        <button class="submit" onclick="submitForm()">Подать заявку</button>
+    </div>
+</div>
+
+<script>
+const LOT_SIZE = 350; // 1 лот = 350 тонн
+let captchaValue = "";
+
+function calcAmount() {
+    const lots = document.getElementById('lots').value;
+    document.getElementById('amount').value = lots ? lots * LOT_SIZE : "";
+}
+
+function generateCaptcha() {
+    captchaValue = "";
+    for (let i = 0; i < 5; i++) captchaValue += Math.floor(Math.random() * 10);
+    document.getElementById('captcha').innerText = captchaValue;
+}
+
+generateCaptcha();
+
+function submitForm() {
+    if (document.getElementById('captchaInput').value === captchaValue) {
+        document.getElementById('price').value = "";
+        document.getElementById('lots').value = "";
+        document.getElementById('amount').value = "";
+        document.getElementById('captchaInput').value = "";
+        generateCaptcha();
+    } else {
+        generateCaptcha();
+        document.getElementById('captchaInput').value = "";
+    }
+}
+</script>
+
+</body>
+</html>
