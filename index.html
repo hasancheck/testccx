@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Подача заявки</title>
+
 <style>
 body {
     background:#0f1115;
     font-family: Arial, sans-serif;
     color:#e5e7eb;
 }
+
 .panel {
     width:360px;
     margin:40px auto;
@@ -16,21 +18,25 @@ body {
     border-radius:10px;
     padding:20px;
 }
+
 .title {
     font-size:18px;
     font-weight:bold;
     margin-bottom:15px;
 }
+
 .info {
     font-size:13px;
     line-height:1.6;
     margin-bottom:15px;
 }
+
 hr {
     border:none;
     border-top:1px solid #2a2f36;
     margin:15px 0;
 }
+
 .input {
     width:100%;
     padding:10px;
@@ -40,26 +46,34 @@ hr {
     border-radius:6px;
     color:#fff;
 }
+
+.input[readonly] {
+    opacity:0.8;
+}
+
 .balance {
     display:flex;
     gap:8px;
     margin:15px 0;
 }
+
 .balance button {
     flex:1;
     padding:8px;
     border:none;
     border-radius:6px;
-    cursor:pointer;
 }
+
 .balance .active {
     background:#2563eb;
     color:white;
 }
+
 .balance .inactive {
     background:#2a2f36;
     color:#aaa;
 }
+
 select {
     width:100%;
     padding:10px;
@@ -68,6 +82,7 @@ select {
     border-radius:6px;
     color:white;
 }
+
 .captcha-box {
     margin-top:15px;
     background:#111827;
@@ -78,6 +93,7 @@ select {
     cursor:pointer;
     user-select:none;
 }
+
 .submit {
     margin-top:18px;
     width:100%;
@@ -91,6 +107,7 @@ select {
 }
 </style>
 </head>
+
 <body>
 
 <div class="panel">
@@ -104,54 +121,62 @@ select {
 
     <hr>
 
-    <input class="input" type="number" id="price" placeholder="Цена за единицу *">
-    <input class="input" type="number" id="lots" placeholder="Количество лотов *" oninput="calcAmount()">
-    <input class="input" type="number" id="amount" placeholder="Количество товара * (ton)" readonly>
+    <input class="input" id="price" type="number" placeholder="Цена за единицу *">
+
+    <input class="input" id="lots" type="number"
+           placeholder="Количество лотов *"
+           oninput="calcAmount()">
+
+    <input class="input" id="amount" type="number"
+           placeholder="Количество товара * (ton)"
+           readonly>
 
     <div class="balance">
-        <button class="active">Клиента</button>
-        <button class="inactive">Личный</button>
+        <button class="active" type="button">Клиента</button>
+        <button class="inactive" type="button">Личный</button>
     </div>
 
     <select>
         <option selected>ТОО Сейком</option>
     </select>
 
-    <div id="captchaBlock">
-        <div class="captcha-box" id="captcha" onclick="generateCaptcha()"></div>
-        <input class="input" type="text" placeholder="Капча *" id="captchaInput">
-        <button class="submit" onclick="submitForm()">Подать заявку</button>
-    </div>
+    <div class="captcha-box" id="captcha" onclick="generateCaptcha()"></div>
+
+    <input class="input" id="captchaInput" type="text" placeholder="Капча *">
+
+    <button class="submit" onclick="submitForm()">Подать заявку</button>
 </div>
 
 <script>
 const LOT_SIZE = 350; // 1 лот = 350 тонн
 let captchaValue = "";
 
+// автоматический расчет количества товара
 function calcAmount() {
     const lots = document.getElementById('lots').value;
-    document.getElementById('amount').value = lots ? lots * LOT_SIZE : "";
+    document.getElementById('amount').value =
+        lots ? lots * LOT_SIZE : "";
 }
 
+// генерация капчи
 function generateCaptcha() {
     captchaValue = "";
-    for (let i = 0; i < 5; i++) captchaValue += Math.floor(Math.random() * 10);
+    for (let i = 0; i < 5; i++) {
+        captchaValue += Math.floor(Math.random() * 10);
+    }
     document.getElementById('captcha').innerText = captchaValue;
 }
 
+// генерация при загрузке
 generateCaptcha();
 
+// кнопка подачи заявки — полное обнуление
 function submitForm() {
-    if (document.getElementById('captchaInput').value === captchaValue) {
-        document.getElementById('price').value = "";
-        document.getElementById('lots').value = "";
-        document.getElementById('amount').value = "";
-        document.getElementById('captchaInput').value = "";
-        generateCaptcha();
-    } else {
-        generateCaptcha();
-        document.getElementById('captchaInput').value = "";
-    }
+    document.getElementById('price').value = "";
+    document.getElementById('lots').value = "";
+    document.getElementById('amount').value = "";
+    document.getElementById('captchaInput').value = "";
+    generateCaptcha();
 }
 </script>
 
